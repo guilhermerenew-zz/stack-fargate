@@ -3,7 +3,7 @@ services:
 script:
 - docker build -t api .
 - docker tag api $DOCKER_USERNAME/api:20200531
-- docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+- docker login docker.io -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 after_script:
 - docker images
 env:
