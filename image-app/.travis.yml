@@ -1,6 +1,30 @@
-language: ruby
-rvm:
-- 2.0.0
-- 1.9.3
-- jruby-19mode
-- rbx-2
+#sudo: required 
+#services:
+#  - docker
+#  script:
+#  - docker build -t api .
+#  - docker tag api $DOCKER_USERNAME/guilhermerenew/api:20200529
+#  - docker push $DOCKER_USERNAME/guilhermerenew/api:20200529
+#  - bundle exec foreman start;
+#  - docker ps -a
+#  - docker run --rm $DOCKER_USERNAME/guilhermerenew/api:20200529 /etc/os-release
+# script:
+# - bundle exec rake test
+# env:
+#   global:
+#    secure: b+q5aeBm9OGEAnwC7qtZoC+YNsKCigmheseJ/w7MnannmcpuTAfxlZ5QFPwK5a3pxeTYJLXCf2TXBO9C2aVmk9Vm16pgxLI5H4UgviJBBoTsF2RL5urEvSEfEI0bxc/ZFqr6NayfwwOfIsPu90qgGdoZY//gbPFs4Au3oobXrF9nZHK/gRdFZO+kZ8UbADaxgWQmu0wfau0etFRdBjPJ5Mez9Fqc8zr4OUBCPueGy1gnQec2dzSn/fqGfLT4jPxxthmCG6uloycx48ZbGwPn49TojaWevSM0WKwTvx9vYxXUFmsG5dQBCk0YTpRBZT7HmMfD9un9hawK6ScXKFcaVOIgX4pwWo+mbiLpjusQu/iSZQ+k4ZnrNnaXIV4mBg/C4W9PuoVCxCVHd83xrg+YKEfwfgkI8QUgO1f/KNT41elMKndKFPw7RtStNXg1un96RoTkRghtlvGGlyGAHbnNsQPaHdod0sAbIRGl0zj77OmIACJ0HzVoQOF5IAfuzjjRT4upzr05VmDBLKwc93jutN1RCu7NYDnRzKu2unhtxiBMwwhbJEBXSzWp1Ab9NR1i+F43FTdglsWKkUUwgCN5/qjBvx3ZdynLsd5CofEjkcbtPkLP3pCesOiSCH9tUl2vomh4xXRq6ARVvS94pFJ43f0aMbN86sfCxwDB7NihdPo=
+
+---
+
+sudo: required 
+services:
+ - docker
+script:
+ - docker build -t api .
+ - docker tag api $DOCKER_USERNAME/guilhermerenew/api:20200529
+ - docker run --rm $DOCKER_USERNAME/guilhermerenew/api:20200529 /etc/os-release
+after_script:
+  - docker images
+env:
+   global:
+    secure: b+q5aeBm9OGEAnwC7qtZoC+YNsKCigmheseJ/w7MnannmcpuTAfxlZ5QFPwK5a3pxeTYJLXCf2TXBO9C2aVmk9Vm16pgxLI5H4UgviJBBoTsF2RL5urEvSEfEI0bxc/ZFqr6NayfwwOfIsPu90qgGdoZY//gbPFs4Au3oobXrF9nZHK/gRdFZO+kZ8UbADaxgWQmu0wfau0etFRdBjPJ5Mez9Fqc8zr4OUBCPueGy1gnQec2dzSn/fqGfLT4jPxxthmCG6uloycx48ZbGwPn49TojaWevSM0WKwTvx9vYxXUFmsG5dQBCk0YTpRBZT7HmMfD9un9hawK6ScXKFcaVOIgX4pwWo+mbiLpjusQu/iSZQ+k4ZnrNnaXIV4mBg/C4W9PuoVCxCVHd83xrg+YKEfwfgkI8QUgO1f/KNT41elMKndKFPw7RtStNXg1un96RoTkRghtlvGGlyGAHbnNsQPaHdod0sAbIRGl0zj77OmIACJ0HzVoQOF5IAfuzjjRT4upzr05VmDBLKwc93jutN1RCu7NYDnRzKu2unhtxiBMwwhbJEBXSzWp1Ab9NR1i+F43FTdglsWKkUUwgCN5/qjBvx3ZdynLsd5CofEjkcbtPkLP3pCesOiSCH9tUl2vomh4xXRq6ARVvS94pFJ43f0aMbN86sfCxwDB7NihdPo=
