@@ -3,10 +3,9 @@ services:
 script:
 - docker build -t api .
 - docker tag api $DOCKER_USERNAME/api:20200531
+- docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 after_script:
 - docker images
-before_deploy:
-- docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 env:
   global:
   - secure: Ei52PriTI+EW+IaHtNAE5ea6S3C82PrHnWgBwGAtmHNYmeh3DwgVXzDk79JuaNOgJtMSAgU0VoNGBYpkhrb63YrxMx4NYYW+x6x00cZmvR5/byN4u2KBDiTnJsgwBJaIftgcfTxZShbh91xxErlK5zRap8JsmXBGUOWIVvYNU3w79UXpshsd6AZ6v0o889C+FwEUhrF31OVF6b5MQJj2ajngQwpE9KYPMmuuONU9/009QJRyxT5PBH/5GOk86f+j2cjVQK9h/iV3GDMCm8LaY54rLqLx+D8nVa+f5Z8tzvqcvwtAhonvRAjFjK3lCKviHiwKSxn42JsU6Q1eYbW0KkqgpB9f73zqzivS8YcBuZU9fPdGXGXmUqURHupfuUEH+HW7ckz105J8YkpNV2nfP5q35TEO9yp7uBJM3EWmGVcBkeLu7gYZeXrFEALIpApvLMhXK7bC4slfPNblBJQgcebQAl82sDK94KvoczYzOh1fYzbIX0YFZktH/V5qPeb04x6qRDLxDVfFCXTmD4AGHkZdP4dMFMwvmslkhUaGW+2ud1oyz8Fb1O1kcu4nMGlJwu9t6aVfbxju+sG1ZYeba3zrYgsSyLB+sj/RTuHlEWR02NLrhNSRidEd7VstiIvma7SIknJJR1CkLW27e2IWM5pbHQPemuYr0rHJef1RumQ=
