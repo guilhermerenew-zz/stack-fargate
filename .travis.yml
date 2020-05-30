@@ -3,6 +3,7 @@ services:
 script:
 - docker build -t api .
 - docker tag api $DOCKER_USERNAME/api:20200531
+- docker login --username [guilhermerenew]
 - docker push $DOCKER_USERNAME/api:20200531
 after_script:
 - docker images
