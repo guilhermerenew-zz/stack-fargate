@@ -4,7 +4,6 @@ services:
 script:
  - docker build -t api .
  - docker tag api $DOCKER_USERNAME/guilhermerenew/api:20200529
- - docker run --rm $DOCKER_USERNAME/guilhermerenew/api:20200529 /etc/os-release
 after_script:
   - docker images
 env:
