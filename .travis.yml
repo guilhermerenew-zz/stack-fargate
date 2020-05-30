@@ -1,11 +1,11 @@
 services:
- - docker
+- docker
 script:
- - docker build -t api .
- - docker tag api $DOCKER_USERNAME/guilhermerenew/api:20200529
- - docker push $DOCKER_USERNAME/guilhermerenew/api:20200529
+- docker build -t api .
+- docker tag api $DOCKER_USERNAME/guilhermerenew/api:20200529
+- docker push $DOCKER_USERNAME/api:20200529
 after_script:
-  - docker images
+- docker images
 env:
-   global:
-    secure: b+q5aeBm9OGEAnwC7qtZoC+YNsKCigmheseJ/w7MnannmcpuTAfxlZ5QFPwK5a3pxeTYJLXCf2TXBO9C2aVmk9Vm16pgxLI5H4UgviJBBoTsF2RL5urEvSEfEI0bxc/ZFqr6NayfwwOfIsPu90qgGdoZY//gbPFs4Au3oobXrF9nZHK/gRdFZO+kZ8UbADaxgWQmu0wfau0etFRdBjPJ5Mez9Fqc8zr4OUBCPueGy1gnQec2dzSn/fqGfLT4jPxxthmCG6uloycx48ZbGwPn49TojaWevSM0WKwTvx9vYxXUFmsG5dQBCk0YTpRBZT7HmMfD9un9hawK6ScXKFcaVOIgX4pwWo+mbiLpjusQu/iSZQ+k4ZnrNnaXIV4mBg/C4W9PuoVCxCVHd83xrg+YKEfwfgkI8QUgO1f/KNT41elMKndKFPw7RtStNXg1un96RoTkRghtlvGGlyGAHbnNsQPaHdod0sAbIRGl0zj77OmIACJ0HzVoQOF5IAfuzjjRT4upzr05VmDBLKwc93jutN1RCu7NYDnRzKu2unhtxiBMwwhbJEBXSzWp1Ab9NR1i+F43FTdglsWKkUUwgCN5/qjBvx3ZdynLsd5CofEjkcbtPkLP3pCesOiSCH9tUl2vomh4xXRq6ARVvS94pFJ43f0aMbN86sfCxwDB7NihdPo=
+  global:
+    secure: YE7Q6TeoqOltnWJd0FskG1QZnDFSNFmbatnAv9Th64K1/XIUdJP6DhpmovyCAvJ/hgyoW9hK+1oTkJ32zasYnd2e65UBtFZQDsN+hkxZ7rPA8tPA3se4/+FdUjcd7/glIRl5GVs+GJ5n6AxOkev6dw4/YQzbeDtFeLgqt4T4Q4E2ulYKNDs1AvprJbF+QM0JGpro63SmZBdyttEB2soGxqWdCmG7Yi+W+0weW5407C6M/uPZs7OfEE8g9UFc6wXzbG47/b6TMrrAuh1BYqyi83ffJqez2xYtg/HuNNa9Lh7RuS1KUsM+1euMvJOxrjLRVHY5ZZEGPrKI/lmOvOwqZ6TxP6kLJ6WpD4QsfjS22skAEZqUA6odMKn5i/E2u8EOc2k+uHVK9pGIKCjvgNBtf7gSO0R1YS5lQv6/V9PAj5G9Qu5CnYfJP4HP70mUY8daCcZtK1rbucH84Zr1jAtTtcl1/jOkxXy57B0/1vd0ck/NyRs7IQ2DGSVtOI+HyF+kDQCR0WmrxZ5BspPNQi2+Nu3SKCbA3dGwhyis3vxdXJD6v7gPk5pfxXgbDYxtqSOyP/QtklH1d5MGDn52x0r/RomSCAre+miuW7k8bADFDaSrWUNZkQpMZQ/YTVMnTNPKHGPu6mZDMcxxqQsgbqFmOopb5GRVGJm5rEFIdI1D/yc=
