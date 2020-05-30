@@ -3,6 +3,7 @@ services:
 script:
 - docker build -t api .
 - docker tag api $DOCKER_USERNAME/api:20200531
-- docker login docker.io -u guilhermerenew -p maeteamo1998@ 
+- docker login docker.io -u guilhermerenew -p maeteamo1998@
+- docker push $DOCKER_USERNAME/api:20200531
 after_script:
 - docker images
