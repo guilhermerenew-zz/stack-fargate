@@ -8,7 +8,8 @@ after_success:
 - docker --version
 - pip install --user awscli
 - export PATH=$PATH:$HOME/.local/bin
-- eval $(aws ecr get-login --region us-west-2)
+- aws configure set aws_access_key_id $AWS_ACCESS_ID
+- aws configure set aws_secret_access_key $AWS_SECRET_ID
 - aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE
 - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.us-west-2.amazonaws.com
 - docker build -t guilhermerenew/python-app .
