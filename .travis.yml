@@ -2,8 +2,8 @@ services:
 - docker
 script:
 - docker build -t api .
-- docker tag api $DOCKER_USERNAME/api:version1.0
+- docker tag api $DOCKER_USERNAME/api:version1.1
 - docker login docker.io -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-- docker push $DOCKER_USERNAME/api:version1.0
+- docker push $DOCKER_USERNAME/api:version1.1
 after_script:
 - docker images
