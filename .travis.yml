@@ -4,6 +4,8 @@ install:
 - echo "install nothing!"
 script:
 - echo "no tests!"
+before_install:
+- ./ecr_credentials.sh
 after_success:
 - docker --version
 - pip install --user awscli
