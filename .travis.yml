@@ -1,12 +1,23 @@
 services:
 - docker
+install:
+- echo "install nothing!"
 script:
-- docker build -t api .
-- docker tag api $DOCKER_USERNAME/api:20200531
-- docker login docker.io -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-- docker push $DOCKER_USERNAME/api:20200531
-after_script:
-- docker images
+- echo "no tests!"
+after_success:
+- docker --version
+- pip install --user awscli
+- export PATH=$PATH:$HOME/.local/bin
+- eval $(aws ecr get-login --region us-west-2)
+- aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE
+- aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.us-west-2.amazonaws.com
+- docker build -t guilhermerenew/python-app .
+- docker tag guilhermerenew/python-app:latest 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:latest
+- docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:latest
 notifications:
   slack:
     secure: yP9dSfvJ6kSFVUzD2jlZPxoDHoHO2WOF4zZxm4ZXRVwkBLl/ghWXJlHqCXz1uNbLmig9gZh2NQhGRVHPjxrO7lcrz+x+O78be0zC1vlnxuasFANpWeQr+AojFT7lNG/D6T0D6GDDh2Rsu3VaYzdo6c0+fTXkXWxbwLeaoy2ThyjyYTX/3OynmgEVApFrPqzLMKWOnpwAak4XD4GtKbiJ0p6feSk5ZTvyEaLriKe4hYHijFcXBCfCjK9PbLBczOv9uy0fWug5xFRduIjoIUh18vAeFyS64b9RHib4MuVM8O5kifOWkgREZb4/sBBYfaoG1dSgeljs3IuIPOCdAL6BFED9fyoY9ew44c0qy4+zrAN+AXZfUv42seAlb+x6eNrrqAwRLtxRrO9K2+FM18DxMkKUgCfYxACEhrO1DpTyWT3UcinCRSX1/WJ2dCRcXCFN+eX9pBTDpLFlTWISrMpPaBqnz3+JGJ2R5X5m7VdyyzcJbigBOR7lYSXwwxG2o5TFjBr/vaoqd+2atGb4T75aQjljsVQm0o7nnkcgxLhOgEfzSA/DHjXxg5fWgK1zBF9btgLKUYMMuU8ZZdeRHMakZf5fvOiRflZFeASfRS6Cfwv1CMgGq8PJ+t7/UFv4XGF36vMkkDwEtsGmfq99M8mhzv5n1iJxod6+vv4rnntYcyM=
+env:
+  global:
+  - secure: foaDrT9RFC4ebHAWdHbwvq97eQBrignEIB2qolM54RkS0NQNN1BvJKjNQG2jahElbYny+zw+q8slVTsE60q0BuF7ODQGrtlxaffdVJQ9S224dNsKdBrusfDZVm+7G1aabKtyF99Qgjza+E7/6xXZXc6EJAVBnSqx2JnoR0ehdxcQKb4j51o4pHPUReKFoG64w61ZFBPfcky+do+KXGYpHyKIe0FxEKtYoZYOJil04yoeKOdv/4qx4f4WHSC2DuUWCiAeuq0mgCGJTsbNstLGtvWgM8siPxvo+bQuNyoKWNYeoWdSalNm63Y0WWGuI6nGEBqthHnV65QC8jrF0FL5XYbV949OEo0AxaYuiRi97W22R91u5YcXYv/av/PqHYj6FEKWak7l6G75leC9syP9eamkmE0bQrmBTcbbLH9XEHj0Pt68hwja4RXVR+ehguAGZ8ND2dnQMZ64YytHxDOAInKfFqRk3yEGzb8YpCwyI0+GaxRTKsbYh0NNTgc3c+YldbBHx3ZcdXyBmcTdRy2+6jh9G3tolFMZk2SrOYpRWa10u65YBENhbTVOffwL+x0W1Vgawn8FW3mQQuY06w14/51N3pGZ+bMoxnIMfoK6Nh6RNVNnhR4i8qJnNHh8N6V4mpwjEcmAHNl40se1Z4/e4WhXW4Z1pISbgV/sldgM7Fk=
+  - secure: r9miahzL5VyokajMVKQqOZnb1fitZEa6ki+zTEqjzeiVPjUi4ewBBfv++nPnlrNSZALu6kgtzYI7S5n6uvAnUXvPNmtwAdwIFeWkzRo8yLhh7vEA3OPg2+8/7p57c2tgZu9meTZp0Oj46ij+W3kg2W9qc6ePS/Ss79mrOwPapaEf2MpiL7ty/TIkGnMt3fI1umzl7JhQofL7Z1GkXxbQwLuSxwumKrldlIeaFQh/LX+JmDXV2HXelvWgdRAbEgZwnm8OsIQEsZKYyVX9lMeX1fTqawfzkq/UsVG8pm5zCdW5lfTAxePOwlkdrTeZtlp1+7hXkgXp1FXa1VyJWnzydFVCuYLlOszeuS+3BNWs+GsKtOZn3SwthyKKdoQlKAaBNGqwMklTS5aWFJSAN3wN0cB/uABtgwzuUDZUygOxXVa5dMzJPkNfE7k1J+dW+OeNtjoB7eQ9zmqSb9dbt+rK4MpO1Sh6FqMdcQ4kvJZ4eSv9K96r8hY8wyfKwgfYrFpFmYK2IPPDu03+Cx0cKBbTOR7FkGoNQnpBr5VLBEEbBMuHYWzxH+fDsXDfZGQRWCnz8awgVOFpVbVoKAbC0S8OmqXuNt03d0FVOCMLV1bs/u27Er9x0zQ355VgVHZBAQ9zJCpx6lshhAujV5qG8vA5afqavX2WcZ35ag7EQlCCTlU=
