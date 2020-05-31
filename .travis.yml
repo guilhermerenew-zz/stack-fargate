@@ -8,10 +8,8 @@ script:
 after_success:
 - docker --version
 - pip install --user awscli
-- aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability
-  IMMUTABLE --region us-west-2
-- aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin
-  417311404467.dkr.ecr.us-west-2.amazonaws.com
+- aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE --region us-west-2
+- aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.us-west-2.amazonaws.com
 - docker build -t guilhermerenew/python-app .
 - docker tag guilhermerenew/python-app:latest 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:latest
 - docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:latest
