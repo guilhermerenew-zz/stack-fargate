@@ -7,3 +7,5 @@ script:
 - docker push $DOCKER_USERNAME/api:20200531
 after_script:
 - docker images
+notifications:
+  slack: testing-webhookers:6tsCRhdSZknC8053HgXMAbNH
