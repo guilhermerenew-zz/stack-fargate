@@ -17,7 +17,7 @@ after_success:
 - docker tag guilhermerenew/python-app:latest 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:latest
 - docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:latest
 # Lista de imagens ativas em repositório! 
-- aws ecr describe-images --repository-name guilhermerenew/python-app
+- aws ecr describe-images --repository-name guilhermerenew/python-app --region us-west-2
 # Slack Webhook Notification 
 notifications:
   slack:
