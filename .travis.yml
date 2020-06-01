@@ -2,17 +2,23 @@ services:
 - docker
 install:
 - echo "install nothing!"
+# Script que carrega configuração de Variaveis AWS
 script:
-- echo "no tests!"
+- echo "Inicando Build e Push para o ECR!"
 - sh "./ecr_credentials.sh"
 after_success:
 - docker --version
+# Depois de validação de versão, é instalado o pacote aws-cli
 - pip install --user awscli
+# Comandos ECR para autenticação em repositório, processo de tag, build e push realizados realizados do modo padrão. 
 - aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE --region us-west-2
 - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.us-west-2.amazonaws.com
 - docker build -t guilhermerenew/python-app .
 - docker tag guilhermerenew/python-app:latest 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:latest
 - docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:latest
+# Lista de imagens ativas em repositório! 
+- aws ecr describe-images --repository-name guilhermerenew/python-app
+# Slack Webhook Notification 
 notifications:
   slack:
     secure: yP9dSfvJ6kSFVUzD2jlZPxoDHoHO2WOF4zZxm4ZXRVwkBLl/ghWXJlHqCXz1uNbLmig9gZh2NQhGRVHPjxrO7lcrz+x+O78be0zC1vlnxuasFANpWeQr+AojFT7lNG/D6T0D6GDDh2Rsu3VaYzdo6c0+fTXkXWxbwLeaoy2ThyjyYTX/3OynmgEVApFrPqzLMKWOnpwAak4XD4GtKbiJ0p6feSk5ZTvyEaLriKe4hYHijFcXBCfCjK9PbLBczOv9uy0fWug5xFRduIjoIUh18vAeFyS64b9RHib4MuVM8O5kifOWkgREZb4/sBBYfaoG1dSgeljs3IuIPOCdAL6BFED9fyoY9ew44c0qy4+zrAN+AXZfUv42seAlb+x6eNrrqAwRLtxRrO9K2+FM18DxMkKUgCfYxACEhrO1DpTyWT3UcinCRSX1/WJ2dCRcXCFN+eX9pBTDpLFlTWISrMpPaBqnz3+JGJ2R5X5m7VdyyzcJbigBOR7lYSXwwxG2o5TFjBr/vaoqd+2atGb4T75aQjljsVQm0o7nnkcgxLhOgEfzSA/DHjXxg5fWgK1zBF9btgLKUYMMuU8ZZdeRHMakZf5fvOiRflZFeASfRS6Cfwv1CMgGq8PJ+t7/UFv4XGF36vMkkDwEtsGmfq99M8mhzv5n1iJxod6+vv4rnntYcyM=
