@@ -1,11 +1,11 @@
 # ecs.tf
 
 resource "aws_ecs_cluster" "main" {
-  name = "app-cluster"
+  name = "py-cluster"
 }
 
 data "template_file" "py_app" {
-  template = file("./templates/ecs/py_app.json.tpl")
+  template = file("./templates/ecs/python_app.json.tpl")
 
   vars = {
     app_image      = var.app_image
@@ -17,7 +17,7 @@ data "template_file" "py_app" {
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family                   = "python-app-task"
+  family                   = "py-app-task"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
@@ -27,7 +27,7 @@ resource "aws_ecs_task_definition" "app" {
 }
 
 resource "aws_ecs_service" "main" {
-  name            = "py-service"
+  name            = "cb-service"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.app.arn
   desired_count   = var.app_count
@@ -41,10 +41,9 @@ resource "aws_ecs_service" "main" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.app.id
-    container_name   = "python-app"
+    container_name   = "cb-app"
     container_port   = var.app_port
   }
 
   depends_on = [aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
 }
-
