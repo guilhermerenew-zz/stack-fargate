@@ -1,79 +1,28 @@
-# Define environment
-os: linux  # The default OS
-dist: xenial # Ubuntu 16.04
-arch: arm64 # Architecture signifying a containerized version of Linux to boot faster
-
-# Define language
-language: shell  # aka, bash on Linux
-
-# Only build PRs against master branch or pushes to master branch
-branches:
-  only:
-    - master
-
-# Export global variables into shell
-env:
-  global:
-    # Setting the version of terraform - https://github.com/hashicorp/terraform/releases
-    - tf_version=0.12.19
-
-    # Setting terraform init CLI options - https://www.terraform.io/docs/commands/init.html
-    - tf_init_cli_options=" -input=false"
-
-    # Set terraform validation CLI options - https://www.terraform.io/docs/commands/validate.html
-    - tf_validation_cli_options=""
-
-    # Set terraform plan CLI options - https://www.terraform.io/docs/commands/plan.html
-    - tf_plan_cli_options=" -lock=false -input=false"
-
-    # Set terraform apply CLI options - https://www.terraform.io/docs/commands/apply.html
-    - tf_apply_cli_options=" -auto-approve -input=false"
-
+dist: xenial
+language: bash
+before_install:
+- wget https://releases.hashicorp.com/terraform/0.12.25/terraform_0.12.25_linux_amd64.zip
+- unzip terraform_0.12.25_linux_amd64.zip
+- sudo mv terraform /usr/local/bin/
+- rm terraform_0.12.25_linux_amd64.zip
 jobs:
   include:
-    - stage: terraform plan
-
-      # Terraform Plan: As part of a pull request or kicked off by an API
-      if: type IN (pull_request, api)
-
-      install:
-        # Download and install terraform before each run
-        - wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
-        - unzip terraform_"$tf_version"_linux_amd64.zip
-        - sudo mv terraform /usr/local/bin/
-        - rm terraform_"$tf_version"_linux_amd64.zip
-
-      script:
-        # Check if terraform fmt correct. If not, fail validation
-        - echo "Validating Terraform fmt"
-        - terraform fmt -recursive -check
-
-        - echo "Pull request detected, creating change plan"
-
-        # Terraform init, validate, then create change plan. If any fail, fail validation
-        - terraform init $tf_init_cli_options
-        - terraform validate $tf_validation_cli_options
-        - terraform plan $tf_plan_cli_options
-
-    - stage: terraform apply
-
-      # Terraform Apply: Only when pushing direct to master, or when PR merge into master
-      if: type IN (push) and branch = master
-
-      install:
-        # Download and install terraform before each run
-        - wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
-        - unzip terraform_"$tf_version"_linux_amd64.zip
-        - sudo mv terraform /usr/local/bin/
-        - rm terraform_"$tf_version"_linux_amd64.zip
-
-      script:
-        - echo "Merge detected, executing changes"
-
-        # Terraform init and then apply changes to environment
-        - terraform init $tf_init_cli_options
-        - terraform apply $tf_apply_cli_options
-# Slack Webhook Notification 
+  - stage: terraform plan
+    if: type IN (pull_request)
+    script:
+    - terraform init -backend-config backend_config/dev.tfvars
+    - terraform plan
+  - stage: terraform apply
+    script:
+    - terraform init
+    - terraform apply -auto-approve
+branches:
+  only:
+  - master
 notifications:
   slack:
     secure: yP9dSfvJ6kSFVUzD2jlZPxoDHoHO2WOF4zZxm4ZXRVwkBLl/ghWXJlHqCXz1uNbLmig9gZh2NQhGRVHPjxrO7lcrz+x+O78be0zC1vlnxuasFANpWeQr+AojFT7lNG/D6T0D6GDDh2Rsu3VaYzdo6c0+fTXkXWxbwLeaoy2ThyjyYTX/3OynmgEVApFrPqzLMKWOnpwAak4XD4GtKbiJ0p6feSk5ZTvyEaLriKe4hYHijFcXBCfCjK9PbLBczOv9uy0fWug5xFRduIjoIUh18vAeFyS64b9RHib4MuVM8O5kifOWkgREZb4/sBBYfaoG1dSgeljs3IuIPOCdAL6BFED9fyoY9ew44c0qy4+zrAN+AXZfUv42seAlb+x6eNrrqAwRLtxRrO9K2+FM18DxMkKUgCfYxACEhrO1DpTyWT3UcinCRSX1/WJ2dCRcXCFN+eX9pBTDpLFlTWISrMpPaBqnz3+JGJ2R5X5m7VdyyzcJbigBOR7lYSXwwxG2o5TFjBr/vaoqd+2atGb4T75aQjljsVQm0o7nnkcgxLhOgEfzSA/DHjXxg5fWgK1zBF9btgLKUYMMuU8ZZdeRHMakZf5fvOiRflZFeASfRS6Cfwv1CMgGq8PJ+t7/UFv4XGF36vMkkDwEtsGmfq99M8mhzv5n1iJxod6+vv4rnntYcyM=
+env:
+  global:
+  - secure: uexrYM3Y/jb6fjFBJqmK9UHzLgEK1XWWkK/2Qw2QFj6F6SyXXSC1jg4Nw6oGhx1gbxTC66kNmfARzVoTU8bgYkFDE/0uHq7RJMJPR4QoDt8lo3J8qJb2YjmJJOBfgkKBsj9NGjq79kEBZP8azMXwiGrxtRJKiVBieDgpt2lW90kdCzr29/K12TJzMAPuu0JlfbEALAcbzTgiJHZTTpIxpTGiBOJS/SY//5Fa71nojTM83jxM8wdddD9AA7xiteLoZrMVQWO59wmloQwsOMWISHESzKt8zsii7AKQL6jUv0hp14mc9AkCfB6ow+qJ0ryQjfoWPs6+Ds4OSDXGtIsXyzMjBa83wKwqZwUQ71w+59DNMW9qGk7Syd4ameBLTKzLPsVg/5KuJHZ9xDZlKBUgGgsY1eWQnb7f76y6+PbU1a74OWYibGnv71DxT2laHt4oqapYd3ALOjqxpoj6yJKQLZEjSbW9rTLmwit4iRi4QsJsW5lQY4SsQ+iJ/kwmZh3SsSeq+w1QY+6SPbxmHYcYA6E+vHuqtjhIarbtN7+AvJM72TAY/FgiiNi01I5cN+oCe5DZQuaPQv7Z37uE8heO7nHejoRUKq3L7KUeGp84Ni+PB4NUMRP8XmEsg2cdS1idrSEE2sIL73V8bVauIiN0QzBWYGrP96/U2qcDPjy2KI8=
+  - secure: wL3GW7V1crgmL27xcCU1TpS+GL4wMfVinoeRFItkfal36cT1fCwkZwjV7bj2N7tX95BggbBybGbwNXjBhdP6QkocNioJry1XpU+3ZK4KFW/o5395ydQPZNWZ7rc6OqBBqXdRZdt8Rf1qL5wVJ2N4rDFzEfttCdxgBKfC80QJ2xdmBLL7J/32EeXlVEbG9Jv2EahqaywPV4KdWIiafD+2Msd9Ly9QaeNqGgiEy+NC4JlorJrHxT6EomanpkuZ+7tPTqGH86MBQBBRWDUxxW1DUCU/zPMA/MecCMytC3EKJi2Q/a21iKLlsk02UIR3BN4JWJpHnoocQoNcnXdRDSP5qIis9X7VubZ7CRNVQwmIAZD3U8WGv22t31yfK5fbtKlQYFLvG6uhiM35LLw03i/j+VsifGU00YUSNPSFW4dd5WO/W4pW2BgXZVSE6ovRyPMIFFfUhME2dDy4wnEfy4zCY3/2eP6dQr3SCZcifXkDnJjYTrCD+YcbjkrN7y/B1EdKNfVwyoEtPqA72N7YCwrs4bTQNPmNkEPICb41PNIJyCl9qKNco4SRvjP+VliO3HL478n3UeC26vCd3B+woa0mmH41SNF+TUFjmlDUlDF4fDpcTZdhKhyaevCYZD+81jIGu3afl3u5FK18AntGhS/JbdAmOLAMGE9Jo/d9XV8yg8w=
