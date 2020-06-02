@@ -15,7 +15,7 @@ jobs:
   - stage: terraform apply
     script:
     - terraform init
-    - terraform apply
+    - terraform -auto-approve
 branches:
   only:
   - master
