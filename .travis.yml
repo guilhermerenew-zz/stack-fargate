@@ -9,15 +9,15 @@ branches:
 
 # Export variables
 env:
-  - tf_version=0.12.19 tf_init_cli_options="-input=false" tf_validation_cli_options="" tf_plan_cli_options="-lock=false -input=false" tf_apply_cli_options="-auto-approve -input=false"
-
+  - tf_version=0.12.19
+  
 # Install dependencies
 before_install:
   - wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
   - unzip -v terraform_"$tf_version"_linux_amd64.zip
   - sudo mv terraform /usr/local/bin/
 script:
-  - /usr/local/bin/terraform version
+  - ls -ltrs /usr/local/bin/
 # Slack Webhook Notification 
 notifications:
   slack:
