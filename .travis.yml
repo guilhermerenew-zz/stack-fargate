@@ -12,7 +12,7 @@ jobs:
     script:
     - terraform init -backend-config backend_config/dev.tfvars
     - terraform plan
-  - stage: terraform apply
+  - stage: terraform destroy
     script:
     - terraform init
     - terraform destroy -auto-approve
