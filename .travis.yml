@@ -17,7 +17,7 @@ before_install:
   - unzip -v terraform_"$tf_version"_linux_amd64.zip
   - sudo mv terraform /usr/local/bin/
 script:
-  - terraform plan
+  - /usr/local/bin/terraform version
 # Slack Webhook Notification 
 notifications:
   slack:
