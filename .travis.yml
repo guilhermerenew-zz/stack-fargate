@@ -13,9 +13,7 @@ jobs:
     - terraform init -backend-config backend_config/dev.tfvars
     - terraform plan
   - stage: terraform apply
-    if: type IN (push) and branch = master
     script:
-    - terraform init -backend-config backend_config/dev.tfvars
     - terraform apply
 branches:
   only:
