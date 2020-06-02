@@ -16,12 +16,8 @@ before_install:
   - wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
   - unzip -v terraform_"$tf_version"_linux_amd64.zip
   - sudo mv terraform /usr/local/bin/
-
-# Terraform Plan and Apply
-# Plan only on pull requests, Apply on merged code
-jobs:
-  include:
-    - stage: terraform plan
+script:
+  - terraform plan
 # Slack Webhook Notification 
 notifications:
   slack:
