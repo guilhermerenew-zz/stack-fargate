@@ -1,4 +1,28 @@
-# Considerações Gerais
+# Apresentação
+
+## Sobre
+Projeto se baseia em execução de API REST em python para realização de chamadas e valores mantidos podem ser consultados por consultas HTTP. Vimos essa aplicação de um modo não só interativo mais que pode ser utilizado em diversas frentes com relação a comunicação e status page. Por se basear em chamadas REST e a uma liguagem de facil execução e interpretação o mapeammento da evolução de plataforma foi divido entre as etapas:
+
+![picture](./imagens/stack-steps.jpg)
+
+Com essas etapas simples, foi construída uma stack de entrega de infraestrutura baseada em diversos pontos com relação a qualidade de software, disponibilidade e resproveitamento de código. Vamos passar em cada uma delas.
+
+### App.
+Como descrito abaixo o método de consulta com relação a aplicação é basicamente o POST de um novo comentário e a consulta do mesmo. Porém isso não inibe a forma como código estará disponibilizado e para nós voltados a Infra, termos escalabilidade e precisão a cada passo que a aplicação realiza.
+
+### Build Image
+Pensando em emcapsular uma aplicação de forma integra e mantendo os componentes intactos o docker foi a solução mais rápida e simples de disponibilizarmos a aplicação aonde quer que ela esteja. Isso quer dizer que em qualquer com disponibilidade de execução de containers esta imagem será executada da mesma forma.
+
+### Playground Development
+Tal etapa é onde desenvolvemos **e testamos** toda entrega da infraestrutura e como ela sera disponibilizada posteriormente. Tal etapa envolve a entrega da stack como código e pipeline de teste desse código.
+
+
+### Production 
+Em "produção" é o frontend em que nossa aplicação será disponibilizada, onde temos uma infrastrutura baseada no comportamento de aplicação por tras de tudo isso. 
+
+
+# Descrição do Case 
+## Considerações Gerais
 
 Você deverá usar este repositório como o repo principal do projeto, i.e., todos os seus commits devem estar registrados aqui, pois queremos ver como você trabalha.
 
