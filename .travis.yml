@@ -15,7 +15,7 @@ jobs:
     script:
     - terraform init
     - terraform plan
-    - terraform validade
+    - terraform validate
     - terraform destroy -auto-approve
 branches:
   only:
