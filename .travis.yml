@@ -7,12 +7,17 @@ before_install:
 - rm terraform_0.12.25_linux_amd64.zip
 jobs:
   include:
- - stage: terraform destroy deployment 
+  - stage: terraform plan deployment
+    if: type IN (pull_request)
+    script:
+    - terraform init -backend-config backend_config/dev.tfvars
+    - terraform plan
+  - stage: terraform apply deployment 
     script:
     - terraform init
     - terraform validate
     - terraform plan
-    - terraform destroy -auto-approve
+    - terraform apply -auto-approve
 branches:
   only:
   - master
