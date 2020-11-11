@@ -127,21 +127,9 @@ curl -sv localhost:8000/api/comment/list/2
 ```
 
 
-# O que será avaliado na sua solução?
+# O que foi levado em conta! 
 
-* Automação da infra, provisionamento dos hosts (IaaS)
-
-* Automação de setup e configuração dos hosts (IaC)
-
-* Pipeline de deploy automatizado
-
-* Monitoramento dos serviços e métricas da aplicação
-
-
-# Dicas
-
-Use ferramentas e bibliotecas open source, mas documente as decisões e porquês;
-
-Automatize o máximo possível;
-
-Em caso de dúvidas, pergunte.
+- [x] Automação da infra, provisionamento dos hosts (IaaS)
+- [x] Automação de setup e configuração dos hosts (IaC)
+- [x] Pipeline de deploy automatizado
+- [x] Monitoramento dos serviços e métricas da aplicação
