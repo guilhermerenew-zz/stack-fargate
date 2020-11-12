@@ -1,9 +1,5 @@
-# provider.tf
-
-# Specify the provider and access details
+# Cloud Provider Access
 provider "aws" {
-  shared_credentials_file = "$HOME/.aws/credentials"
-  profile                 = "default"
-  region                  = var.aws_region
+  profile = "pessoal-profile"
+  region  = "us-west-2"
 }
-
