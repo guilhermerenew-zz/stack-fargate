@@ -1,30 +1,30 @@
-dist: xenial
-language: bash
-before_install:
-- wget https://releases.hashicorp.com/terraform/0.12.25/terraform_0.12.25_linux_amd64.zip
-- unzip terraform_0.12.25_linux_amd64.zip
-- sudo mv terraform /usr/local/bin/
-- rm terraform_0.12.25_linux_amd64.zip
-jobs:
-  include:
-  - stage: terraform plan deployment
-    if: type IN (pull_request)
-    script:
-    - terraform init -backend-config backend_config/dev.tfvars
-    - terraform plan
-  - stage: terraform apply deployment 
-    script:
-    - terraform init
-    - terraform plan
-    - terraform validate
-    - terraform destroy -auto-approve
-branches:
-  only:
-  - master
-notifications:
-  slack:
-    secure: yP9dSfvJ6kSFVUzD2jlZPxoDHoHO2WOF4zZxm4ZXRVwkBLl/ghWXJlHqCXz1uNbLmig9gZh2NQhGRVHPjxrO7lcrz+x+O78be0zC1vlnxuasFANpWeQr+AojFT7lNG/D6T0D6GDDh2Rsu3VaYzdo6c0+fTXkXWxbwLeaoy2ThyjyYTX/3OynmgEVApFrPqzLMKWOnpwAak4XD4GtKbiJ0p6feSk5ZTvyEaLriKe4hYHijFcXBCfCjK9PbLBczOv9uy0fWug5xFRduIjoIUh18vAeFyS64b9RHib4MuVM8O5kifOWkgREZb4/sBBYfaoG1dSgeljs3IuIPOCdAL6BFED9fyoY9ew44c0qy4+zrAN+AXZfUv42seAlb+x6eNrrqAwRLtxRrO9K2+FM18DxMkKUgCfYxACEhrO1DpTyWT3UcinCRSX1/WJ2dCRcXCFN+eX9pBTDpLFlTWISrMpPaBqnz3+JGJ2R5X5m7VdyyzcJbigBOR7lYSXwwxG2o5TFjBr/vaoqd+2atGb4T75aQjljsVQm0o7nnkcgxLhOgEfzSA/DHjXxg5fWgK1zBF9btgLKUYMMuU8ZZdeRHMakZf5fvOiRflZFeASfRS6Cfwv1CMgGq8PJ+t7/UFv4XGF36vMkkDwEtsGmfq99M8mhzv5n1iJxod6+vv4rnntYcyM=
+services:
+  - docker
+install:
+  - echo "Iniciando Instalacão :)!"
+# Script que carrega configuração de Variaveis AWS
+script:
+  - echo "Inicando Build e Push para o ECR!"
+  - sh "./setup-building/ecr_credentials.sh"
+after_success:
+# Validacão versão do docker
+  - docker --version
+# Depois de validação de versão, é instalado o pacote aws-cli
+  - pip install --user awscli
+# Comandos ECR para autenticação em repositório, processo de tag, build e push realizados realizados do modo padrão.
+  - aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE 
+  - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.us-west-2.amazonaws.com
+  - docker build -t guilhermerenew/python-app:flask-app .
+  - docker tag guilhermerenew/python-app:flask-app 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:flask-app
+  - docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:flask-app
+# Lista de imagens ativas em repositório!
+  - aws ecr describe-images --repository-name guilhermerenew/python-app 
+# Variaveis de Ambiente AWS encriptografadas!
 env:
   global:
-  - secure: uexrYM3Y/jb6fjFBJqmK9UHzLgEK1XWWkK/2Qw2QFj6F6SyXXSC1jg4Nw6oGhx1gbxTC66kNmfARzVoTU8bgYkFDE/0uHq7RJMJPR4QoDt8lo3J8qJb2YjmJJOBfgkKBsj9NGjq79kEBZP8azMXwiGrxtRJKiVBieDgpt2lW90kdCzr29/K12TJzMAPuu0JlfbEALAcbzTgiJHZTTpIxpTGiBOJS/SY//5Fa71nojTM83jxM8wdddD9AA7xiteLoZrMVQWO59wmloQwsOMWISHESzKt8zsii7AKQL6jUv0hp14mc9AkCfB6ow+qJ0ryQjfoWPs6+Ds4OSDXGtIsXyzMjBa83wKwqZwUQ71w+59DNMW9qGk7Syd4ameBLTKzLPsVg/5KuJHZ9xDZlKBUgGgsY1eWQnb7f76y6+PbU1a74OWYibGnv71DxT2laHt4oqapYd3ALOjqxpoj6yJKQLZEjSbW9rTLmwit4iRi4QsJsW5lQY4SsQ+iJ/kwmZh3SsSeq+w1QY+6SPbxmHYcYA6E+vHuqtjhIarbtN7+AvJM72TAY/FgiiNi01I5cN+oCe5DZQuaPQv7Z37uE8heO7nHejoRUKq3L7KUeGp84Ni+PB4NUMRP8XmEsg2cdS1idrSEE2sIL73V8bVauIiN0QzBWYGrP96/U2qcDPjy2KI8=
-  - secure: wL3GW7V1crgmL27xcCU1TpS+GL4wMfVinoeRFItkfal36cT1fCwkZwjV7bj2N7tX95BggbBybGbwNXjBhdP6QkocNioJry1XpU+3ZK4KFW/o5395ydQPZNWZ7rc6OqBBqXdRZdt8Rf1qL5wVJ2N4rDFzEfttCdxgBKfC80QJ2xdmBLL7J/32EeXlVEbG9Jv2EahqaywPV4KdWIiafD+2Msd9Ly9QaeNqGgiEy+NC4JlorJrHxT6EomanpkuZ+7tPTqGH86MBQBBRWDUxxW1DUCU/zPMA/MecCMytC3EKJi2Q/a21iKLlsk02UIR3BN4JWJpHnoocQoNcnXdRDSP5qIis9X7VubZ7CRNVQwmIAZD3U8WGv22t31yfK5fbtKlQYFLvG6uhiM35LLw03i/j+VsifGU00YUSNPSFW4dd5WO/W4pW2BgXZVSE6ovRyPMIFFfUhME2dDy4wnEfy4zCY3/2eP6dQr3SCZcifXkDnJjYTrCD+YcbjkrN7y/B1EdKNfVwyoEtPqA72N7YCwrs4bTQNPmNkEPICb41PNIJyCl9qKNco4SRvjP+VliO3HL478n3UeC26vCd3B+woa0mmH41SNF+TUFjmlDUlDF4fDpcTZdhKhyaevCYZD+81jIGu3afl3u5FK18AntGhS/JbdAmOLAMGE9Jo/d9XV8yg8w=
+  - secure: MiVNRCXnKzRggXtpQpAA7n4u2BHxDaPq7itCeXXWaQDMoXfj2hLjMPPQ9CPvwyPFKoPXRZWVC1SbT0Injptscq8WQNh3wsx214lRL7rcLd4dUWGj6Fmjln0Wxc8IXey7V67Nke9vu2hYfVACBCFM6jmVlQ03k7hsKyNT7/eWP9qdAZwHaVvrqD24rYYhsNE/wR7K6yA0afZ9BTUTXs6HJEmML1jRwpng1VuwP+MSv4PRE410M+l/MEM4jrCFq4dswPMRrtgpu/k6Itv7FhmMeCjNV6iwc2TIVbJP9gpJI92oe0wzmUyB0Z0NAVSmZUiKl7llww8IFAYNXdFy52G8VtsuronGxO3fyNqSaNnJQZQJCDGRoy9cWz7JOai1YcqRVT2XhnsSYDxsa/nTwASIAUe9tX6TdeGJ4CtR6GGslnbkRvhfgpQVjACJyYnSwkQ7yA8l65EVwzlctJRPAn7Yx52JR9GXR64GhJ5+86F2Ap/0sG89oeqFyhOIF5WXH8JkZ4vxY542ay4Fn2Ysu7x+BFVZIYirIc2oaNcW2k92Mc/xC6qcN9L73vU9M005GiLZg0xkmJJZXNsNtojaM06w7JaFjjDbz5vbzDQLjX9u7qlRo3zNIzoWptI5TY/FBjyvO+zMoeamgOB5y8yycyglTUxXt3m98j4tG8rgu6ZADLU=
+  - secure: mHwYutTHXOR3fhUhoArTgE4MM0UGDIqCpbBTIvKBdyJSqivBfP8WhO9S9IeLL2vjSbiL8v+d8SDO8k/JsRufSN/AgNtx/44x0d6KyB7opghXGb3Sgdl6rFuqXClBfIfmL7HcHiagYNI3a/G9oYxzPkLRh3H2VEGTa3N4k3uRBvE8ntFmAT7VXSFlU/5Ij4HQXO6TBVFUnofZA1UVq4DLFhXGeL0RWtG19bTFKlv6pk/SAxfPLSz/9/xEXWjxo71ndfjOmAO4q/lQg5YNiopnulm4sAkdMKJ3iIQFKM31A8Bo0CcyEio/9tfnogxmYW2qmYbafoOKpM+h5k22kSppguc7znsUuKC/IFf45TLOf2OVJM29liCOKkErHjQrPbU4Unsvseg1OOoky/xYtnTBAl47rSRjU2KOi7H3g8gAYisl3y9wZg9hyZIv43D0y3J+BKDfAGUGJjKilf4xL6YW0LFfkgrijLl7335UfSN+0ndZmOI2iFfofI6/SARRlaPCihnjLWh2s1TBR+lVnERlPvpZ3hiPY9BaMBgSzEeH2n2QZWkkMIJpZ5E889erv+OAY9C0sZv0GNQ3jpvFuEOfZQrjSu+CDhp63crfaxLwdYj8DUVKp35nv/tmMUc1FtLOwmr+Fl04oLhsSoiMqwSMETVDVgPYfR11UMCeapuzPbI=
+# Slack Webhook Notification 
+notifications:
+  slack:
+    secure: HWV8LJXqFNHWQt+KXYQ7u7l0ddf0LdkQflv0JMY+OQGqOXuCIg6afncnpWp9gZ+63CpmFT3gAidRiW+UrFDUUr99WKB4C8NCiqc3YMZHk1Aow/KICYioBBUvwO6TpCXc2Z0DPisrtzK7Gfc+qt/wMJgdYwe5KmKfLw7vBnr38MNT9/dswXB4JNLqhPMLi9xr89L1yRu8DSc0kGpzwjL2aff9NZvDILQmAqt2bUoWvDNjJklC7PTAebXOmEg+Ljkbc+fZLrBDnSdmPxcUBVIraemsQMWga8TGSUv3kpR2p/t7DhNzxrMu6bmmQSdVLOninAoe81r+WBxfZ65sopwkYauO+HAEUgjur5CmQG/2ZmEUik8DzeId+DRmCpe44L6feMsstnwayHCalfTRUk6Pwu1uKsvmMYAnVPEDXXf+eAQdtCWasQZtTHkxy7rTe9VxFWaHSCqNNbFN1XyTJsIQNuWhX90kEBY3ozF1KpqV6H2FiGvXfszabDbN29a5G4cU269lkuE+eiyWEtB5Hse7f99NSPh7nV6AWzjuV4/uFMajtuXWVAaAQoPVEe6vvUim7HS9JfriADVFn0ZU9uA6//ylDP3Wa9w/6Gs1ysUuiAXy4ljpUBWarcUyzfdkQebd0tkmMH/fpWDNpBuPDYedtKYYgSIaFhDAsvdXdlv36sw=
