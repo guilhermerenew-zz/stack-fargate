@@ -1,5 +1,5 @@
 # Apresentação
-[![Build Status](https://travis-ci.com/guilhermerenew/guilherme-oliveira-up.svg?token=jLquSu4uNryHqvqfYwmH&branch=master)](https://travis-ci.com/guilhermerenew/guilherme-oliveira-up)
+[![Build Status](https://travis-ci.com/guilhermerenew/stack-fargate.svg?branch=master)](https://travis-ci.com/guilhermerenew/stack-fargate)
 > A escolha de tecnologias é livre para a resolução do problema. Utilize os componentes e serviços que melhor domina pois a apresentação na entrega do desafio deverá ser como uma aula em que você explica em detalhes cada decisão que tomou.
 
 ## Sobre
