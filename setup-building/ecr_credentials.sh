@@ -9,6 +9,6 @@ EOL
 
 cat > ~/.aws/config << EOL
 [default]
-region = us-west-2
+region = eu-south-1
 output = json
 EOL
